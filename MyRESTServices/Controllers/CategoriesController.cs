@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyRESTServices.BLL.DTOs;
 using MyRESTServices.BLL.Interfaces;
 
 namespace MyRESTServices.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -20,14 +22,14 @@ namespace MyRESTServices.Controllers
             _validatorCreate = validatorCreate;
             _validatorUpdate = validatorUpdate;
         }
-
+        [Authorize(Roles = "contributor,reader")]
         [HttpGet]
         public async Task<IEnumerable<CategoryDTO>> Get()
         {
             var results = await _categoryBLL.GetAll();
             return results;
         }
-
+        [Authorize(Roles = "contributor,reader")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -38,7 +40,7 @@ namespace MyRESTServices.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "contributor,reader")]
         [HttpGet("categories/{name}")]
         public async Task<IActionResult> Get(string name)
         {
@@ -49,7 +51,7 @@ namespace MyRESTServices.Controllers
             }
             return Ok(result);
         }
-
+        [Authorize(Roles = "contributor,reader")]
         [HttpGet("GetCount")]
         public async Task<IActionResult> GetCount(string names = "")
         {
@@ -61,7 +63,7 @@ namespace MyRESTServices.Controllers
             return Ok(result);
         }
 
-
+        [Authorize(Roles = "contributor")]
         [HttpPost]
         public async Task<IActionResult> Post(CategoryCreateDTO categoryCreateDTO)
         {
@@ -81,7 +83,7 @@ namespace MyRESTServices.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "contributor")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, CategoryUpdateDTO categoryUpdateDTO)
         {
@@ -101,7 +103,7 @@ namespace MyRESTServices.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "contributor")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -120,7 +122,7 @@ namespace MyRESTServices.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "contributor,reader")]
         [HttpGet("GetWithPaging")]
         public async Task<IEnumerable<CategoryDTO>> GetWithPaging(int pageNumber, int pageSize, string name = "")
         {
